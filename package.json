@@ -1,0 +1,10 @@
+{
+  "name": "door-api",
+  "version": "0.1.0",
+  "description": "API implementation for door (LMS for dong-eui university)",
+  "main": "index.js",
+  "repository": "https://github.com/solo5star/deu-door/door-api",
+  "author": "solo5star <solo_5@naver.com>",
+  "license": "MIT",
+  "private": true
+}
