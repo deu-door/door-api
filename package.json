@@ -6,5 +6,11 @@
   "repository": "https://github.com/solo5star/deu-door/door-api",
   "author": "solo5star <solo_5@naver.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "prettier": "^2.3.2"
+  }
 }
