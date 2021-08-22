@@ -1,16 +1,42 @@
 {
-  "name": "door-api",
-  "version": "0.1.0",
-  "description": "API implementation for door (LMS for dong-eui university)",
-  "main": "index.js",
-  "repository": "https://github.com/solo5star/deu-door/door-api",
-  "author": "solo5star <solo_5@naver.com>",
-  "license": "MIT",
-  "private": true,
-  "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.1",
-    "prettier": "^2.3.2"
-  }
+	"name": "door-api",
+	"version": "0.1.0",
+	"description": "API implementation for door (LMS for dong-eui university)",
+	"repository": "https://github.com/solo5star/deu-door/door-api",
+	"author": "solo5star <solo_5@naver.com>",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"example": "ts-node src/example.ts",
+		"lint": "eslint .",
+		"test": "jest --runInBand"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"axios-cookiejar-support": "^1.0.1",
+		"axios-logger": "^2.5.0",
+		"dotenv": "^10.0.0",
+		"js-video-url-parser": "^0.4.3",
+		"jsdom": "^17.0.0",
+		"qs": "^6.10.1",
+		"tough-cookie": "^4.0.0"
+	},
+	"devDependencies": {
+		"@types/dotenv": "^8.2.0",
+		"@types/jest": "^27.0.1",
+		"@types/jsdom": "^16.2.13",
+		"@types/node": "^16.7.1",
+		"@types/qs": "^6.9.7",
+		"@types/tough-cookie": "^4.0.1",
+		"@typescript-eslint/eslint-plugin": "^4.29.2",
+		"@typescript-eslint/parser": "^4.29.2",
+		"eslint": "^7.32.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.4.1",
+		"jest": "^27.0.6",
+		"prettier": "^2.3.2",
+		"ts-jest": "^27.0.5",
+		"ts-node": "^10.2.1",
+		"typescript": "^4.3.5"
+	}
 }
