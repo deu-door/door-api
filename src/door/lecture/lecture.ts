@@ -54,13 +54,19 @@ const getDoorLink = (onclick: string) => {
 };
 
 export async function getLectureList(door: Door, courseId: Course['id']): Promise<Lecture[]> {
-	const { document, HTMLTableElement } = await door.get(`/LMS/StudyRoom/Index/${courseId}`);
-	const table = document.querySelector('table#gvListTB');
+	const { document, HTMLTableElement, HTMLSelectElement } = await door.get(`/LMS/StudyRoom/Index/${courseId}`);
 
-	assert(table instanceof HTMLTableElement);
+	const table = document.querySelector('table#gvListTB');
+	const termOptions = document.querySelector('#tno'); // 연도를 가져오기 위함
+
+	assert(table instanceof HTMLTableElement && termOptions instanceof HTMLSelectElement);
+
+	const year = /(\d+)년도/.exec(termOptions.querySelector('option[selected]')?.textContent ?? '')?.[1];
+	assert(year !== undefined && /\d+/.test(year));
 
 	const lectures: Lecture[] = parseListedTableElement(table).map(row => {
 		const { url } = getDoorLink(row['강의주제'].querySelector('a')?.getAttribute('onclick') || '');
+		const [from, to] = row['수업기간'].text.split('~').map(token => new Date(`${year}-${token.trim()}`));
 
 		return {
 			courseId,
@@ -70,9 +76,8 @@ export async function getLectureList(door: Door, courseId: Course['id']): Promis
 			week: Number(row['주차'].text),
 			period: Number(row['차시'].text),
 			duration: {
-				// TODO: implement moment based parse
-				from: row['수업기간'].text.split(' ~ ')[0],
-				to: row['수업기간'].text.split(' ~ ')[1],
+				from: startOfDay(from).toISOString(),
+				to: endOfDay(to).toISOString(),
 			},
 			length: Number(row['학습시간(분)'].text),
 			attendance: parseImageText(row['출결상태'].querySelector('img')?.getAttribute('src') || '') as LectureAttendance,
