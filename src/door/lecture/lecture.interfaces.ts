@@ -39,7 +39,7 @@ export interface Lecture {
 	/**
 	 * 출결 상태 (미수강/완료전/출석/결석) (예: 완료전)
 	 */
-	attendance: LectureAttendance;
+	attendance: LectureAttendance | undefined;
 	/**
 	 * 강의 학습현황
 	 */

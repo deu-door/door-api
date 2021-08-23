@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { endOfDay, startOfDay } from 'date-fns';
 import { Course } from '../course/course.interfaces';
 import Door from '../door';
 import { parseViewDoor } from '../helper/door';
@@ -36,7 +37,7 @@ function parseImageText(src: string) {
 		case '/Content/images/common/icon_LecRoom02_04.gif':
 			return '지각';
 	}
-	return '알 수 없음';
+	return undefined;
 }
 
 const getDoorLink = (onclick: string) => {
@@ -80,7 +81,7 @@ export async function getLectureList(door: Door, courseId: Course['id']): Promis
 				to: endOfDay(to).toISOString(),
 			},
 			length: Number(row['학습시간(분)'].text),
-			attendance: parseImageText(row['출결상태'].querySelector('img')?.getAttribute('src') || '') as LectureAttendance,
+			attendance: parseImageText(row['출결상태'].querySelector('img')?.getAttribute('src') || '') as LectureAttendance | undefined,
 
 			url,
 		};
