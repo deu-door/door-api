@@ -1,5 +1,7 @@
 import { Attachment } from '../common/attachment.interfaces';
 import { Course } from '../course/course.interfaces';
+import { NoticePost, NoticePostHead } from './notice_post.interfaces';
+import { ReferencePost, ReferencePostHead } from './reference_post.interfaces';
 
 /**
  * 포스트 종류를 나타내는 상수 enum
@@ -24,6 +26,12 @@ export const PostVariants = [
 	//PostVariant.TEAM,
 	//PostVariant.MENTORING,
 ] as const;
+
+/**
+ * 게시물 Union 타입
+ */
+export type PostHead = NoticePostHead | ReferencePostHead;
+export type Post = NoticePost | ReferencePost;
 
 /**
  * List view에서 각 Post에 대해 표시되는 최소한의 정보들

@@ -1,5 +1,8 @@
 import { Attachment } from '../common/attachment.interfaces';
 import { Course } from '../course/course.interfaces';
+import { Activity, ActivityHead } from './activity.interfaces';
+import { Homework, HomeworkHead } from './homework.interfaces';
+import { TeamProject, TeamProjectHead } from './team_project.interfaces';
 
 /**
  * 과제 종류를 나타내는 상수 enum
@@ -14,6 +17,12 @@ export enum AssignmentType {
 	INDIVIDUAL = '개인과제',
 	TEAM = '팀별과제',
 }
+
+/**
+ * 과제 Union 타입
+ */
+export type Assignment = Homework | TeamProject | Activity;
+export type AssignmentHead = HomeworkHead | TeamProjectHead | ActivityHead;
 
 /**
  * 모든 과제 종류를 모아놓은 배열

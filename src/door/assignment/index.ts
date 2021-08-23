@@ -1,6 +1,4 @@
-import { Activity, ActivityHead } from './activity.interfaces';
-import { Homework, HomeworkHead } from './homework.interfaces';
-import { TeamProject, TeamProjectHead } from './team_project.interfaces';
-
-export type Assignment = Homework | TeamProject | Activity;
-export type AssignmentHead = HomeworkHead | TeamProjectHead | ActivityHead;
+export * from './activity.interfaces';
+export * from './assignment.interfaces';
+export * from './homework.interfaces';
+export * from './team_project.interfaces';
