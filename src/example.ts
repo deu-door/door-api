@@ -1,6 +1,6 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import Door from './door/door';
+import Door from './';
 
 dotenv.config();
 

@@ -8,3 +8,6 @@ export * from './door/term';
 export * from './door/user';
 
 export * from './door/door';
+
+import Door from './door/door';
+export default Door;
