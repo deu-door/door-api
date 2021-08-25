@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Door from '../door';
+import { Door } from '../door';
 import { Term } from './term.interfaces';
 
 export async function getTerms(door: Door): Promise<Term[]> {

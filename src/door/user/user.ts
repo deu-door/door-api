@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Door from '../door';
+import { Door } from '../door';
 import { DoorLoginError } from '../error';
 import { User } from './user.interfaces';
 

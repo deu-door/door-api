@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Course } from '../course/course.interfaces';
-import Door from '../door';
+import { Door } from '../door';
 import { parseSubmission } from '../helper/submission';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { AssignmentType, AssignmentVariant } from './assignment.interfaces';

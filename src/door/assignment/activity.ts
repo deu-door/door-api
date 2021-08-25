@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Course } from '../course/course.interfaces';
-import Door from '../door';
+import { Door } from '../door';
 import { parseListedTableElement } from '../helper/table';
 import { Activity, ActivityHead } from './activity.interfaces';
 import { AssignmentType, AssignmentVariant } from './assignment.interfaces';

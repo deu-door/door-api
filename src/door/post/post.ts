@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { Attachment } from '../common/attachment.interfaces';
 import { Course } from '../course/course.interfaces';
-import Door from '../door';
+import { Door } from '../door';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { BasePost, BasePostHead, PostVariant } from './post.interfaces';
 

@@ -15,7 +15,7 @@ import { getTeamProject, getTeamProjectList } from './assignment/team_project';
 import { getActivity, getActivityList } from './assignment/activity';
 import { getLectureList } from './lecture/lecture';
 
-export default class Door {
+export class Door {
 	axios: AxiosInstance;
 	parser: (content: string) => DOMWindow;
 

@@ -1,5 +1,5 @@
 import { Course } from '../course/course.interfaces';
-import Door from '../door';
+import { Door } from '../door';
 import { getPost, getPostList } from './post';
 import { PostVariant } from './post.interfaces';
 import { ReferencePost, ReferencePostHead } from './reference_post.interfaces';
