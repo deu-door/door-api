@@ -11,3 +11,10 @@ export class DoorUnauthorizedError extends DoorError {
 		this.name = 'DoorUnauthorizedError';
 	}
 }
+
+export class DoorLoginError extends DoorError {
+	constructor(message?: string) {
+		super(message ?? '로그인할 수 없습니다.');
+		this.name = 'DoorIncorrectPasswordError';
+	}
+}

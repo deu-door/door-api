@@ -1,5 +1,6 @@
 import assert from 'assert';
 import Door from '../door';
+import { DoorLoginError } from '../error';
 import { User } from './user.interfaces';
 
 export async function login(door: Door, id: string, password: string): Promise<User> {
@@ -14,7 +15,7 @@ export async function login(door: Door, id: string, password: string): Promise<U
 	const { document } = await door.get('https://door.deu.ac.kr/Account/Index');
 
 	// submit form on login page
-	await door.axios.post(
+	const response = await door.axios.post(
 		'https://door.deu.ac.kr/Account/LogOnProcess',
 		{
 			...Object.fromEntries([...document.querySelectorAll<HTMLInputElement>('form input')].map(input => [input.name, input.value])),
@@ -30,7 +31,18 @@ export async function login(door: Door, id: string, password: string): Promise<U
 		},
 	);
 
-	return await getUser(door);
+	const error = /door\.deu\.ac\.kr\/Account\/Index\?ErrorMessage=(.+)/.exec(response.headers['location'] ?? '')?.[1];
+
+	if (error === undefined) {
+		// successfully logined
+		return await getUser(door);
+	} else if (error === 'MSG_ERROR_LOGIN') {
+		// incorrect password
+		throw new DoorLoginError('아이디 또는 비밀번호가 틀렸습니다. 확인 후 다시 시도해주세요.');
+	} else {
+		// unknown error
+		throw new DoorLoginError(error);
+	}
 }
 
 export async function logout(door: Door): Promise<void> {

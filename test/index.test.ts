@@ -2,8 +2,8 @@ import assert from 'assert';
 import dotenv from 'dotenv';
 import { AssignmentVariant, AssignmentVariants } from '../src/door/assignment/assignment.interfaces';
 import { Course } from '../src/door/course/course.interfaces';
-import Door from '../src/door/door';
-import { DoorUnauthorizedError } from '../src/door/error/error.interfaces';
+import Door from '../src/';
+import { DoorLoginError, DoorUnauthorizedError } from '../src/door/error/error.interfaces';
 import { PostVariant, PostVariants } from '../src/door/post/post.interfaces';
 import { Term } from '../src/door/term/term.interfaces';
 import { User } from '../src/door/user/user.interfaces';
@@ -25,6 +25,10 @@ describe('Test Login', () => {
 	test('Check environment variables (ID, PASSWORd) are ready', () => {
 		expect(typeof id).toBe('string');
 		expect(typeof password).toBe('string');
+	});
+
+	test('Login with incorrect password', async () => {
+		await expect(async () => await door.login('20000000', '20000000')).rejects.toThrow(DoorLoginError);
 	});
 
 	test('Login', async () => {
