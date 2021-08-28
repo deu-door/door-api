@@ -4,7 +4,17 @@ import { parseInformaticTableElement, parseListedTableElement } from '../helper/
 import { Term } from '../term/term.interfaces';
 import { Course, CourseRateInfo, CourseSyllabus, CourseTime } from './course.interfaces';
 
-export async function getCourses(door: Door, termId: Term['id']): Promise<Course[]> {
+const getCourseTypeWeight = (word: string) =>
+	// calculate cost (sort priority) of type
+	(word.includes('전공') ? 2 : -2) +
+	(word.includes('필수') ? 1 : 0) +
+	(word.includes('선택') ? -1 : 0) +
+	(word.includes('교양') ? 1 : -1) +
+	(word.includes('공통') ? -1 : 0);
+
+const sortByCourseType = (a: Course, b: Course): number => getCourseTypeWeight(a.type) - getCourseTypeWeight(b.type);
+
+export async function getCourseList(door: Door, termId: Term['id']): Promise<Course[]> {
 	const { document, HTMLTableElement } = await door.get(`/MyPage${termId !== undefined ? `?termNo=${termId}` : ''}`);
 	const courseTable = document.querySelector('#wrap table');
 
@@ -38,7 +48,8 @@ export async function getCourses(door: Door, termId: Term['id']): Promise<Course
 				division: course['분반'].text,
 			};
 		})
-		.filter(course => course.id !== '');
+		.filter(course => course.id !== '')
+		.sort(sortByCourseType);
 
 	return courses;
 }
@@ -68,7 +79,7 @@ export async function getCourseSyllabus(door: Door, courseId: string): Promise<C
 	//const schedule = parseTableElement(scheduleTable);
 
 	return {
-		//id: courseId,
+		id: courseId,
 
 		//name: description['교과목명'].text,
 		// NOTE: Door 메인에서 이수구분과 수업계획서의 이수구분이 다를 수 있음
