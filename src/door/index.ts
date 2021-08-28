@@ -55,15 +55,17 @@ export class Door {
 		axiosInstance.defaults.headers.common['User-Agent'] =
 			'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Mobile Safari/537.36';
 
-		// use request & response logger
-		//axiosInstance.interceptors.request.use(AxiosLogger.requestLogger, AxiosLogger.errorLogger);
-		//axiosInstance.interceptors.response.use(AxiosLogger.responseLogger, AxiosLogger.errorLogger);
-
 		return axiosInstance;
 	}
 
 	createParser() {
 		return (content: string) => new JSDOM(content).window;
+	}
+
+	verbose(): void {
+		// use request & response logger
+		this.axios.interceptors.request.use(AxiosLogger.requestLogger, AxiosLogger.errorLogger);
+		//this.axios.interceptors.response.use(AxiosLogger.responseLogger, AxiosLogger.errorLogger);
 	}
 
 	async fetch(url: string, config: AxiosRequestConfig = {}): Promise<DOMWindow> {
