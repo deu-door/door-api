@@ -28,6 +28,14 @@ export const PostVariants = [
 ] as const;
 
 /**
+ * PostVariant의 이름
+ */
+export const PostVariantNames = {
+	[PostVariant.NOTICE]: '공지사항',
+	[PostVariant.REFERENCE]: '강의자료',
+} as const;
+
+/**
  * 게시물 Union 타입
  */
 export type PostHead = NoticePostHead | ReferencePostHead;
@@ -36,7 +44,9 @@ export type Post = NoticePost | ReferencePost;
 /**
  * List view에서 각 Post에 대해 표시되는 최소한의 정보들
  */
-export type BasePostHead = Pick<BasePost, 'variant' | 'courseId' | 'id' | 'title' | 'createdAt' | 'noted' | 'author'> & { partial: true };
+export type BasePostHead = Pick<BasePost, 'variant' | 'courseId' | 'id' | 'title' | 'createdAt' | 'noted' | 'author' | 'views'> & {
+	partial: true;
+};
 
 /**
  * 게시물 인터페이스. 상속에 사용됨

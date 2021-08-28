@@ -19,15 +19,24 @@ export enum AssignmentType {
 }
 
 /**
+ * 모든 과제 종류를 모아놓은 배열
+ */
+export const AssignmentVariants = [AssignmentVariant.HOMEWORK, AssignmentVariant.TEAM_PROJECT] as const;
+
+/**
+ * AssignmentVariant에 대응되는 이름
+ */
+export const AssignmentVariantNames = {
+	[AssignmentVariant.HOMEWORK]: '과제',
+	[AssignmentVariant.TEAM_PROJECT]: '팀 프로젝트',
+	[AssignmentVariant.ACTIVITY]: '수업활동일지',
+} as const;
+
+/**
  * 과제 Union 타입
  */
 export type Assignment = Homework | TeamProject | Activity;
 export type AssignmentHead = HomeworkHead | TeamProjectHead | ActivityHead;
-
-/**
- * 모든 과제 종류를 모아놓은 배열
- */
-export const AssignmentVariants = [AssignmentVariant.HOMEWORK, AssignmentVariant.TEAM_PROJECT] as const;
 
 /**
  * List view에서 각 Assignment에 대해 표시되는 최소한의 정보들
