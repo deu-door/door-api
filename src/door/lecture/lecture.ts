@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { endOfDay, startOfDay } from 'date-fns';
 import { Course } from '../course/course.interfaces';
-import { Door } from '../door';
+import { Door } from '..';
 import { parseViewDoor } from '../helper/door';
 import { parseListedTableElement } from '../helper/table';
 import { Lecture, LectureAttendance, LectureType } from './lecture.interfaces';

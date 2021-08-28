@@ -5,15 +5,16 @@ import { DoorUnauthorizedError } from './error/error.interfaces';
 import { getUser, login, logout } from './user/user';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
-import { getTerms } from './term/term';
-import { getCourses, getCourseSyllabus } from './course/course';
+import * as AxiosLogger from 'axios-logger';
+import { getTermList } from './term/term';
+import { getCourseList, getCourseSyllabus } from './course/course';
 import { getNoticePost, getNoticePostList } from './post/notice_post';
 import { DropFirst } from './helper/typing';
 import { getReferencePost, getReferencePostList } from './post/reference_post';
 import { getHomework, getHomeworkList } from './assignment/homework';
 import { getTeamProject, getTeamProjectList } from './assignment/team_project';
 import { getActivity, getActivityList } from './assignment/activity';
-import { getLectureList } from './lecture/lecture';
+import { getLectureList, getLectureProgressList } from './lecture/lecture';
 
 export class Door {
 	axios: AxiosInstance;
@@ -114,7 +115,7 @@ export class Door {
 	 * @returns 유저의 모든 학기
 	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
 	 */
-	getTerms = (...params: DropFirst<Parameters<typeof getTerms>>) => getTerms(this, ...params);
+	getTermList = (...params: DropFirst<Parameters<typeof getTermList>>) => getTermList(this, ...params);
 
 	/**
 	 * 해당 학기에 수강하는 모든 강의를 가져옵니다.
@@ -123,7 +124,7 @@ export class Door {
 	 * @returns 학기에 해당되는 모든 강의 목록
 	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
 	 */
-	getCourses = (...params: DropFirst<Parameters<typeof getCourses>>) => getCourses(this, ...params);
+	getCourseList = (...params: DropFirst<Parameters<typeof getCourseList>>) => getCourseList(this, ...params);
 
 	/**
 	 * 주어진 강의의 수업계획서를 얻습니다.
