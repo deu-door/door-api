@@ -1,8 +1,8 @@
 import assert from 'assert';
-import { Door } from '../door';
+import { Door } from '..';
 import { Term } from './term.interfaces';
 
-export async function getTerms(door: Door): Promise<Term[]> {
+export async function getTermList(door: Door): Promise<Term[]> {
 	const { document, HTMLSelectElement } = await door.get('/MyPage');
 	const termsSelect = document.querySelector('#tno');
 

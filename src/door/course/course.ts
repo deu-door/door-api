@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Door } from '../door';
+import { Door } from '..';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { Term } from '../term/term.interfaces';
 import { Course, CourseRateInfo, CourseSyllabus, CourseTime } from './course.interfaces';

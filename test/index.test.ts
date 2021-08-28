@@ -1,12 +1,17 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import { AssignmentVariant, AssignmentVariants } from '../src/door/assignment/assignment.interfaces';
-import { Course } from '../src/door/course/course.interfaces';
-import Door from '../src/';
-import { DoorLoginError, DoorUnauthorizedError } from '../src/door/error/error.interfaces';
-import { PostVariant, PostVariants } from '../src/door/post/post.interfaces';
-import { Term } from '../src/door/term/term.interfaces';
-import { User } from '../src/door/user/user.interfaces';
+import {
+	AssignmentVariant,
+	AssignmentVariants,
+	Course,
+	Door,
+	DoorLoginError,
+	DoorUnauthorizedError,
+	PostVariant,
+	PostVariants,
+	Term,
+	User,
+} from '../';
 
 dotenv.config();
 
@@ -40,7 +45,7 @@ describe('Test Login', () => {
 
 describe('Test Terms', () => {
 	test('Get Terms', async () => {
-		terms = await door.getTerms();
+		terms = await door.getTermList();
 
 		terms.forEach(term => {
 			expect(term.name).toMatch(/^\d+년 \w+학기$/);
@@ -51,7 +56,7 @@ describe('Test Terms', () => {
 
 describe('Test Courses', () => {
 	test('Get Courses', async () => {
-		courses = await door.getCourses(terms[1].id);
+		courses = await door.getCourseList(terms[1].id);
 
 		courses.forEach(course => {
 			expect(course.id).toMatch(/\d+/);
