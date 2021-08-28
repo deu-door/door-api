@@ -16,10 +16,9 @@
 		"postinstall": "tsc"
 	},
 	"dependencies": {
-		"@types/node": "^16.7.1",
 		"@types/jsdom": "^16.2.13",
+		"@types/node": "^16.7.2",
 		"@types/qs": "^6.9.7",
-		"@types/dotenv": "^8.2.0",
 		"@types/tough-cookie": "^4.0.1",
 		"axios": "^0.21.1",
 		"axios-cookiejar-support": "^1.0.1",
@@ -33,15 +32,15 @@
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.1",
-		"@typescript-eslint/eslint-plugin": "^4.29.2",
-		"@typescript-eslint/parser": "^4.29.2",
+		"@typescript-eslint/eslint-plugin": "^4.29.3",
+		"@typescript-eslint/parser": "^4.29.3",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.1",
-		"jest": "^27.0.6",
+		"jest": "^27.1.0",
 		"prettier": "^2.3.2",
 		"ts-jest": "^27.0.5",
 		"ts-node": "^10.2.1",
-		"typescript": "^4.3.5"
+		"typescript": "^4.0"
 	}
 }
