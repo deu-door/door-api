@@ -225,4 +225,12 @@ export class Door {
 	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
 	 */
 	getLectureList = (...params: DropFirst<Parameters<typeof getLectureList>>) => getLectureList(this, ...params);
+
+	/**
+	 * 온라인강의의 진행 상태를 가져옵니다.
+	 *
+	 * @returns 온라인강의 진행 상태 목록
+	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
+	 */
+	getLectureProgressList = (...params: DropFirst<Parameters<typeof getLectureProgressList>>) => getLectureProgressList(this, ...params);
 }

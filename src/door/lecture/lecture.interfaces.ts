@@ -41,16 +41,16 @@ export interface Lecture {
 	 */
 	attendance: LectureAttendance | undefined;
 	/**
-	 * 강의 학습현황
-	 */
-	progress?: LectureProgress;
-	/**
 	 * 강의로 이동하는 링크. 없을 수도 있음 (미업로드)
 	 */
 	url?: string;
 }
 
 export interface LectureProgress {
+	/**
+	 * Course ID
+	 */
+	courseId: Course['id'];
 	/**
 	 * 수업의 형태. 온라인 또는 오프라인
 	 */

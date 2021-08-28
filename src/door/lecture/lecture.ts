@@ -4,7 +4,7 @@ import { Course } from '../course/course.interfaces';
 import { Door } from '..';
 import { parseViewDoor } from '../helper/door';
 import { parseListedTableElement } from '../helper/table';
-import { Lecture, LectureAttendance, LectureType } from './lecture.interfaces';
+import { Lecture, LectureAttendance, LectureProgress, LectureType } from './lecture.interfaces';
 
 function parseImageText(src: string) {
 	switch (src) {
@@ -88,4 +88,35 @@ export async function getLectureList(door: Door, courseId: Course['id']): Promis
 	});
 
 	return lectures;
+}
+
+export async function getLectureProgressList(door: Door, courseId: Course['id']): Promise<LectureProgress[]> {
+	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseLectureInfo/${courseId}`);
+
+	const learningProgressTable = document.querySelector('#gvListTB');
+
+	assert(learningProgressTable instanceof HTMLTableElement);
+
+	const lectureProgresses: LectureProgress[] = parseListedTableElement(learningProgressTable).map(row => ({
+		courseId,
+
+		week: Number(row['주차'].text),
+		period: Number(row['차시'].text),
+
+		// type: row['수업형태'].text as LectureProgress['type'],
+
+		// parse later
+		attendance: '수업없음',
+
+		length: Number(row['학습시간(분)'].text.split('/')[1]),
+		current: Number(row['학습시간(분)'].text.split('/')[0]),
+
+		views: Number(row['강의접속수'].text),
+
+		startedAt: row['최초학습일'].text.trim().length > 0 ? new Date(row['최초학습일'].text).toISOString() : undefined,
+		finishedAt: row['학습완료일'].text.trim().length > 0 ? new Date(row['학습완료일'].text).toISOString() : undefined,
+		recentViewedAt: row['최근학습일'].text.trim().length > 0 ? new Date(row['최근학습일'].text).toISOString() : undefined,
+	}));
+
+	return lectureProgresses;
 }
