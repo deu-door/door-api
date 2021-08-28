@@ -40,6 +40,10 @@ export interface Course {
  */
 export interface CourseSyllabus {
 	/**
+	 * 강의 ID
+	 */
+	readonly id: string;
+	/**
 	 * 주관학과 (예: 컴퓨터공학과)
 	 */
 	major: string;
