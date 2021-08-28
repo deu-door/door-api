@@ -1,6 +1,6 @@
 import assert from 'assert';
 import dotenv from 'dotenv';
-import Door from './';
+import { Door } from './';
 
 dotenv.config();
 
@@ -18,11 +18,11 @@ assert(typeof id === 'string' && typeof password === 'string');
 	console.log('User:', user);
 
 	// get user's term list
-	const terms = await door.getTerms();
+	const terms = await door.getTermList();
 	console.log('Terms:', terms);
 
 	// get user's courses
-	const courses = await door.getCourses(terms[1].id);
+	const courses = await door.getCourseList(terms[1].id);
 	console.log('Courses:', courses);
 
 	// get user's all notice posts
