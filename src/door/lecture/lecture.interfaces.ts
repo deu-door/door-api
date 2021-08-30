@@ -56,6 +56,14 @@ export interface LectureProgress {
 	 */
 	//type: '온라인' | '오프라인';
 	/**
+	 * 주차
+	 */
+	week: number;
+	/**
+	 * 차시
+	 */
+	period: number;
+	/**
 	 * 최종 학습시간
 	 */
 	length: number;
