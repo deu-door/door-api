@@ -7,7 +7,9 @@ import { BasePost, BasePostHead, PostVariant } from './post.interfaces';
 
 export async function getPostList(door: Door, courseId: Course['id'], variant: PostVariant): Promise<BasePostHead[]> {
 	const { document, HTMLTableElement, HTMLImageElement } = await door.get(
-		`/BBS/Board/List/Course${variant}?cNo=${courseId}&pageRowSize=200`,
+		`/BBS/Board/List/${
+			variant === PostVariant.NOTICE ? 'CourseNotice' : variant === PostVariant.REFERENCE ? 'CourseReference' : ''
+		}?cNo=${courseId}&pageRowSize=200`,
 	);
 	const table = document.querySelector('table.tbl_type');
 
@@ -36,7 +38,11 @@ export async function getPost(door: Door, head: Pick<BasePostHead, 'courseId' | 
 	const { courseId, variant, id } = head;
 
 	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
-	const { document, HTMLTableElement } = await door.get(`/BBS/Board/Read/Course${variant}/${id}?cNo=${courseId}`);
+	const { document, HTMLTableElement } = await door.get(
+		`/BBS/Board/Read/${
+			variant === PostVariant.NOTICE ? 'CourseNotice' : variant === PostVariant.REFERENCE ? 'CourseReference' : ''
+		}/${id}?cNo=${courseId}`,
+	);
 	const detailTable = document.querySelector('table.tbl_type');
 
 	assert(detailTable instanceof HTMLTableElement);
