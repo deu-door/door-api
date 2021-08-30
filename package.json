@@ -8,6 +8,10 @@
 	"private": true,
 	"main": "./build/index.js",
 	"types": "./build/index.d.ts",
+	"files": [
+		"build/**/*.js",
+		"build/index.d.ts"
+	],
 	"scripts": {
 		"example": "ts-node src/example.ts",
 		"lint": "eslint .",
