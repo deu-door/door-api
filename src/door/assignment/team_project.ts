@@ -26,7 +26,8 @@ export async function getTeamProjectList(door: Door, courseId: Course['id']): Pr
 				courseId: courseId,
 
 				title: row['팀프로젝트 제목'].text,
-				type: row['제출방식'].text as AssignmentType,
+				type: AssignmentType.TEAM,
+				// TODO: implement 제출방식 (예: 팀장제출)
 				duration: { from, to },
 				submitted: row['제출 여부'].text === '제출',
 			};

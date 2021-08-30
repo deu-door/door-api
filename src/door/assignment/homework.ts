@@ -5,6 +5,7 @@ import { parseSubmission } from '../helper/submission';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { AssignmentType, AssignmentVariant } from './assignment.interfaces';
 import { Homework, HomeworkHead } from './homework.interfaces';
+import { parseAssignmentType } from '../helper/assignment';
 
 export async function getHomeworkList(door: Door, courseId: Course['id']): Promise<HomeworkHead[]> {
 	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseHomeworkStudentList/${courseId}`);
@@ -27,7 +28,7 @@ export async function getHomeworkList(door: Door, courseId: Course['id']): Promi
 				courseId: courseId,
 
 				title: row['과제제목'].text,
-				type: row['과제유형'].text as AssignmentType,
+				type: parseAssignmentType(row['과제유형'].text),
 				duration: { from, to },
 				submitted: row['제출여부'].text === '제출',
 
@@ -89,7 +90,7 @@ export async function getHomework(door: Door, head: Pick<HomeworkHead, 'courseId
 
 		id,
 		courseId,
-		type: description['과제유형'].text as AssignmentType,
+		type: parseAssignmentType(description['과제유형'].text),
 		// 수업활동일지에선 '주제' 가 사용됨
 		title: description['제목']?.text ?? description['주제'].text ?? '제목이 없습니다',
 		// 수업활동일지에선 '수업내용' 이 사용됨

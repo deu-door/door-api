@@ -6,6 +6,7 @@ import { Activity, ActivityHead } from './activity.interfaces';
 import { AssignmentType, AssignmentVariant } from './assignment.interfaces';
 import { getHomework } from './homework';
 import { getTeamProject } from './team_project';
+import { parseAssignmentType } from '../helper/assignment';
 
 export async function getActivityList(door: Door, courseId: Course['id']): Promise<ActivityHead[]> {
 	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseOutputs/${courseId}`);
@@ -18,16 +19,10 @@ export async function getActivityList(door: Door, courseId: Course['id']): Promi
 		.filter(row => /\d+/.test(row['No'].text))
 		.map(row => {
 			const [from, to] = row['제출기간'].text.split('~').map(date => new Date('20' + date.trim()).toISOString());
-			const type =
-				row['제출방식'].text === '개인제출'
-					? AssignmentType.INDIVIDUAL
-					: row['제출방식'].text === '팀별제출'
-					? AssignmentType.TEAM
-					: AssignmentType.INDIVIDUAL;
 
 			return {
 				variant: AssignmentVariant.ACTIVITY as const,
-				type,
+				type: parseAssignmentType(row['제출방식'].text),
 				partial: true as const,
 
 				id: row['주제'].url?.match(/HomeworkNo=(\d+)/)?.[1] ?? row['주제'].url?.match(/ProjectNo=(\d+)/)?.[1] ?? '',

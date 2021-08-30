@@ -14,8 +14,8 @@ export enum AssignmentVariant {
 }
 
 export enum AssignmentType {
-	INDIVIDUAL = '개인과제',
-	TEAM = '팀별과제',
+	INDIVIDUAL = '개인제출',
+	TEAM = '팀별제출',
 }
 
 /**
