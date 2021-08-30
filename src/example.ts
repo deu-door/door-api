@@ -29,6 +29,10 @@ assert(typeof id === 'string' && typeof password === 'string');
 	const notices = (await Promise.all(courses.map(course => door.getNoticePostList(course.id)))).flat();
 	console.log('Notices:', notices.slice(0, 3));
 
+	// get user's all reference posts
+	const references = (await Promise.all(courses.map(course => door.getReferencePostList(course.id)))).flat();
+	console.log('References:', references.slice(0, 3));
+
 	// get user's all homeworks
 	const homeworks = (await Promise.all(courses.map(course => door.getHomeworkList(course.id)))).flat();
 	console.log('Homeworks:', homeworks.slice(0, 3));
