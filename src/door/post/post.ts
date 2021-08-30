@@ -20,7 +20,7 @@ export async function getPostList(door: Door, courseId: Course['id'], variant: P
 			variant,
 			partial: true as const,
 
-			id: row['제목'].url?.match(/CourseNotice\/(\w+)?/)?.[1] || '',
+			id: row['제목'].url?.match(/\/Read\/[A-Za-z]+\/(\w+)?/)?.[1] || '',
 			courseId,
 
 			author: row['작성자'].text,
