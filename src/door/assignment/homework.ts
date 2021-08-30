@@ -90,8 +90,10 @@ export async function getHomework(door: Door, head: Pick<HomeworkHead, 'courseId
 		id,
 		courseId,
 		type: description['과제유형'].text as AssignmentType,
-		title: description['제목'].text,
-		contents: description['내용'].innerHTML ?? '',
+		// 수업활동일지에선 '주제' 가 사용됨
+		title: description['제목']?.text ?? description['주제'].text ?? '제목이 없습니다',
+		// 수업활동일지에선 '수업내용' 이 사용됨
+		contents: description['내용']?.innerHTML ?? description['수업내용']?.innerHTML ?? '',
 
 		duration: { from, to },
 		additionalDuration: additionalDuration === undefined ? undefined : { from: additionalDuration[0], to: additionalDuration[1] },

@@ -71,7 +71,9 @@ export async function getTeamProject(door: Door, head: Pick<TeamProjectHead, 'co
 		courseId,
 
 		type: AssignmentType.TEAM,
+		// 수업활동일지에선 '주제' 가 사용됨
 		title: description['제목']?.text ?? description['주제']?.text ?? '제목이 없습니다',
+		// 수업활동일지에선 '수업내용' 이 사용됨
 		contents: description['내용']?.innerHTML ?? description['수업내용']?.innerHTML ?? '',
 
 		duration: { from, to },
