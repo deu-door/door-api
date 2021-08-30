@@ -30,7 +30,7 @@ export async function getActivityList(door: Door, courseId: Course['id']): Promi
 				type,
 				partial: true as const,
 
-				id: row['주제'].url?.match(/HomeworkNo=(\d+)/)?.[1] || '',
+				id: row['주제'].url?.match(/HomeworkNo=(\d+)/)?.[1] ?? row['주제'].url?.match(/ProjectNo=(\d+)/)?.[1] ?? '',
 				courseId,
 
 				title: row['주제'].text,
