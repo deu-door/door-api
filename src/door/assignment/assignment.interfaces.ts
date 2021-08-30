@@ -21,7 +21,7 @@ export enum AssignmentType {
 /**
  * 모든 과제 종류를 모아놓은 배열
  */
-export const AssignmentVariants = [AssignmentVariant.HOMEWORK, AssignmentVariant.TEAM_PROJECT] as const;
+export const AssignmentVariants = [AssignmentVariant.HOMEWORK, AssignmentVariant.TEAM_PROJECT, AssignmentVariant.ACTIVITY] as const;
 
 /**
  * AssignmentVariant에 대응되는 이름
