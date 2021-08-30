@@ -11,7 +11,7 @@ import {
 	PostVariants,
 	Term,
 	User,
-} from '../';
+} from '../src';
 
 dotenv.config();
 
