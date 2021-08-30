@@ -11,7 +11,7 @@ assert(typeof id === 'string' && typeof password === 'string');
 
 // door-api playground
 (async () => {
-	const door = new Door();
+	const door = new Door({ timeout: 30000 });
 
 	// login and print user
 	const user = await door.login(id, password);

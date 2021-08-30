@@ -20,12 +20,12 @@ export class Door {
 	axios: AxiosInstance;
 	parser: (content: string) => DOMWindow;
 
-	constructor() {
-		this.axios = this.createAxiosInstance();
+	constructor(axiosOptions?: AxiosRequestConfig) {
+		this.axios = this.createAxiosInstance(axiosOptions);
 		this.parser = this.createParser();
 	}
 
-	createAxiosInstance() {
+	createAxiosInstance(axiosOptions?: AxiosRequestConfig) {
 		const axiosInstance = axios.create({
 			baseURL: 'http://door.deu.ac.kr',
 			transformRequest: [
@@ -35,6 +35,8 @@ export class Door {
 			timeout: 5000,
 			withCredentials: true,
 			validateStatus: status => status >= 200 && status <= 302,
+
+			...axiosOptions,
 		});
 
 		// keep session using cookie jar. (cookie saved between api calls)
