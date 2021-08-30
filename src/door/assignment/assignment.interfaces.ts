@@ -8,9 +8,9 @@ import { TeamProject, TeamProjectHead } from './team_project.interfaces';
  * 과제 종류를 나타내는 상수 enum
  */
 export enum AssignmentVariant {
-	HOMEWORK = 'Homework',
-	TEAM_PROJECT = 'TeamProject',
-	ACTIVITY = 'Activity',
+	HOMEWORK = 'homework',
+	TEAM_PROJECT = 'teamProject',
+	ACTIVITY = 'activity',
 }
 
 export enum AssignmentType {

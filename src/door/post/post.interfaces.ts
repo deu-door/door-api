@@ -7,8 +7,8 @@ import { ReferencePost, ReferencePostHead } from './reference_post.interfaces';
  * 포스트 종류를 나타내는 상수 enum
  */
 export enum PostVariant {
-	NOTICE = 'Notice',
-	REFERENCE = 'Reference',
+	NOTICE = 'notice',
+	REFERENCE = 'reference',
 	//QA = 'QA',
 	//COUNSEL = 'Counsel',
 	//TEAM = 'Team',
