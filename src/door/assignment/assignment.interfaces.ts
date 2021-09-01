@@ -1,7 +1,8 @@
-import { Attachment } from '../common/attachment.interfaces';
+import { Attachment } from '../attachment/attachment.interfaces';
 import { Course } from '../course/course.interfaces';
 import { Activity, ActivityHead } from './activity.interfaces';
 import { Homework, HomeworkHead } from './homework.interfaces';
+import { Submission } from './submission/submission.interfaces';
 import { TeamProject, TeamProjectHead } from './team_project.interfaces';
 
 /**
@@ -105,18 +106,4 @@ export interface BaseAssignment {
 	 * 제출 내용 (undefined는 미제출)
 	 */
 	submission: Submission;
-}
-
-/**
- * 제출 정보를 나타내는 인터페이스
- */
-export interface Submission {
-	/**
-	 * 제출 내용 (예: 금일 진행한 조별과제 회의록)
-	 */
-	contents: string;
-	/**
-	 * 첨부파일
-	 */
-	attachments: Attachment[];
 }

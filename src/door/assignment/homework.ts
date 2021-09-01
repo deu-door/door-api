@@ -1,11 +1,12 @@
 import assert from 'assert';
 import { Course } from '../course/course.interfaces';
 import { Door } from '..';
-import { parseSubmission } from '../helper/submission';
+import { parseSubmission } from './submission/submission';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
-import { AssignmentType, AssignmentVariant } from './assignment.interfaces';
+import { AssignmentVariant } from './assignment.interfaces';
 import { Homework, HomeworkHead } from './homework.interfaces';
 import { parseAssignmentType } from '../helper/assignment';
+import { parseAttachmentList } from '../attachment/attachment';
 
 export async function getHomeworkList(door: Door, courseId: Course['id']): Promise<HomeworkHead[]> {
 	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseHomeworkStudentList/${courseId}`);
@@ -43,9 +44,8 @@ export async function getHomeworkList(door: Door, courseId: Course['id']): Promi
 
 export async function getHomework(door: Door, head: Pick<HomeworkHead, 'courseId' | 'id'>): Promise<Homework> {
 	const { courseId, id } = head;
-	const { document, HTMLTableElement, HTMLFormElement } = await door.get(
-		`/LMS/LectureRoom/CourseHomeworkStudentDetail?CourseNo=${courseId}&HomeworkNo=${id}`,
-	);
+	const url = `/LMS/LectureRoom/CourseHomeworkStudentDetail?CourseNo=${courseId}&HomeworkNo=${id}`;
+	const { document, HTMLTableElement, HTMLFormElement } = await door.get(url);
 
 	const descriptionTable = document.querySelector('#sub_content2 > div:nth-child(1) > table');
 	//const resultTable = document.querySelector('#sub_content2 > div:nth-child(3) > table:not(.tbl_type)'); // this may be a null
@@ -63,12 +63,7 @@ export async function getHomework(door: Door, head: Pick<HomeworkHead, 'courseId
 	// 시간이 많이 지나면 평가 결과 table은 없어질 수도 있음
 	//const result = resultTable instanceof HTMLTableElement ? parseInformaticTableElement(resultTable) : undefined;
 
-	const attachments = [...description['첨부파일'].querySelectorAll('a')]
-		.map(fileElement => ({
-			title: fileElement.textContent?.trim() || '',
-			url: fileElement.getAttribute('href') || '',
-		}))
-		.filter(attachment => attachment.url !== '');
+	const attachments = parseAttachmentList(description['첨부파일'], url);
 
 	// const resultComment = result?.['코멘트'].text;
 	// const resultScore = Number(result?.['점수']?.text?.match(/\d+/)?.[0]) || undefined;
@@ -82,7 +77,7 @@ export async function getHomework(door: Door, head: Pick<HomeworkHead, 'courseId
 			: description['추가 제출기간'].text.split('~').map(date => new Date('20' + date.trim()).toISOString());
 
 	// 제출 관련 정보 파싱
-	const submission = parseSubmission(submissionTable);
+	const submission = parseSubmission(submissionTable, url);
 
 	return {
 		variant: AssignmentVariant.HOMEWORK,

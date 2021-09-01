@@ -15,6 +15,7 @@ import { getHomework, getHomeworkList } from './assignment/homework';
 import { getTeamProject, getTeamProjectList } from './assignment/team_project';
 import { getActivity, getActivityList } from './assignment/activity';
 import { getLectureList, getLectureProgressList } from './lecture/lecture';
+import { download } from './file/download';
 
 export class Door {
 	cookieJar: CookieJar;
@@ -57,6 +58,9 @@ export class Door {
 		// see cookie-jar: https://www.npmjs.com/package/axios-cookiejar-support
 		axiosCookieJarSupport(axiosInstance);
 		axiosInstance.defaults.jar = this.cookieJar;
+
+		// Referer
+		axiosInstance.defaults.headers.common['Referer'] = 'http://door.deu.ac.kr';
 
 		// 기본 Accept 헤더는 application/json, text/plain, */* 이렇게 되어있는데
 		// 기본 값으로 사용시 서버 측에서 500 Internal 에러 발생
@@ -249,4 +253,12 @@ export class Door {
 	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
 	 */
 	getLectureProgressList = (...params: DropFirst<Parameters<typeof getLectureProgressList>>) => getLectureProgressList(this, ...params);
+
+	/**
+	 * Door에 게시되어 있는 파일을 다운로드합니다.
+	 *
+	 * @returns Door 시스템에 업로드 되어있는 파일
+	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
+	 */
+	download = (...params: DropFirst<Parameters<typeof download>>) => download(this, ...params);
 }

@@ -1,5 +1,5 @@
 export * from './door/assignment';
-export * from './door/common';
+export * from './door/attachment';
 export * from './door/course';
 export * from './door/error';
 export * from './door/lecture';

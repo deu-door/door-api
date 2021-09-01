@@ -1,9 +1,9 @@
 import assert from 'assert';
-import { Attachment } from '../common/attachment.interfaces';
 import { Course } from '../course/course.interfaces';
 import { Door } from '..';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { BasePost, BasePostHead, PostVariant } from './post.interfaces';
+import { parseAttachmentList } from '../attachment/attachment';
 
 export async function getPostList(door: Door, courseId: Course['id'], variant: PostVariant): Promise<BasePostHead[]> {
 	const { document, HTMLTableElement, HTMLImageElement } = await door.get(
@@ -37,24 +37,19 @@ export async function getPostList(door: Door, courseId: Course['id'], variant: P
 export async function getPost(door: Door, head: Pick<BasePostHead, 'courseId' | 'variant' | 'id'>): Promise<BasePost> {
 	const { courseId, variant, id } = head;
 
+	const urlParam = variant === PostVariant.NOTICE ? 'CourseNotice' : variant === PostVariant.REFERENCE ? 'CourseReference' : '';
+
 	// /BBS/Board/Read 로 요청을 보내면 서버 자체적으로 "읽음" 처리된 후 /BBS/Board/Detail로 리다이렉트됨
-	const { document, HTMLTableElement } = await door.get(
-		`/BBS/Board/Read/${
-			variant === PostVariant.NOTICE ? 'CourseNotice' : variant === PostVariant.REFERENCE ? 'CourseReference' : ''
-		}/${id}?cNo=${courseId}`,
-	);
+	const url = `/BBS/Board/Read/${urlParam}/${id}?cNo=${courseId}`;
+	const referer = `/BBS/Board/Detail/${urlParam}/${id}?cNo=${courseId}`; // 첨부파일에 필요한 referer 주소
+
+	const { document, HTMLTableElement } = await door.get(url);
 	const detailTable = document.querySelector('table.tbl_type');
 
 	assert(detailTable instanceof HTMLTableElement);
 
 	const detail = parseInformaticTableElement(detailTable);
-
-	const attachments: Attachment[] = [...detail['첨부파일'].querySelectorAll('a')]
-		.map(fileElement => ({
-			title: fileElement.textContent?.trim() || '',
-			url: fileElement.getAttribute('href') || '',
-		}))
-		.filter(attachment => attachment.url !== '');
+	const attachments = parseAttachmentList(detail['첨부파일'], referer);
 
 	return {
 		variant,

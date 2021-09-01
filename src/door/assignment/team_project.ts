@@ -1,10 +1,11 @@
 import assert from 'assert';
 import { Course } from '../course/course.interfaces';
 import { Door } from '..';
-import { parseSubmission } from '../helper/submission';
+import { parseSubmission } from './submission/submission';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { AssignmentType, AssignmentVariant } from './assignment.interfaces';
 import { TeamProject, TeamProjectHead } from './team_project.interfaces';
+import { parseAttachmentList } from '../attachment/attachment';
 
 export async function getTeamProjectList(door: Door, courseId: Course['id']): Promise<TeamProjectHead[]> {
 	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseTeamProjectStudentList/${courseId}`);
@@ -39,10 +40,8 @@ export async function getTeamProjectList(door: Door, courseId: Course['id']): Pr
 
 export async function getTeamProject(door: Door, head: Pick<TeamProjectHead, 'courseId' | 'id'>): Promise<TeamProject> {
 	const { courseId, id } = head;
-
-	const { document, HTMLTableElement, HTMLFormElement } = await door.get(
-		`/LMS/LectureRoom/CourseTeamProjectStudentDetail?CourseNo=${courseId}&ProjectNo=${id}`,
-	);
+	const url = `/LMS/LectureRoom/CourseTeamProjectStudentDetail?CourseNo=${courseId}&ProjectNo=${id}`;
+	const { document, HTMLTableElement, HTMLFormElement } = await door.get(url);
 
 	const descriptionTable = document.querySelector('#sub_content2 > div.form_table_b > table');
 	const submissionTable = document.querySelector('#CourseLeture > div.form_table_s > table');
@@ -52,17 +51,12 @@ export async function getTeamProject(door: Door, head: Pick<TeamProjectHead, 'co
 
 	const description = parseInformaticTableElement(descriptionTable);
 
-	const attachments = [...description['첨부파일'].querySelectorAll('a')]
-		.map(fileElement => ({
-			title: fileElement.textContent?.trim() || '',
-			url: fileElement.getAttribute('href') || '',
-		}))
-		.filter(attachment => attachment.url !== '');
+	const attachments = parseAttachmentList(description['첨부파일'], url);
 
 	const [from, to] = description['제출기간'].text.split('~').map(date => new Date('20' + date.trim()).toISOString());
 
 	// 제출 관련 정보 파싱
-	const submission = parseSubmission(submissionTable);
+	const submission = parseSubmission(submissionTable, url);
 
 	return {
 		variant: AssignmentVariant.TEAM_PROJECT,

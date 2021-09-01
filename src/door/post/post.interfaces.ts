@@ -1,4 +1,4 @@
-import { Attachment } from '../common/attachment.interfaces';
+import { Attachment } from '../attachment/attachment.interfaces';
 import { Course } from '../course/course.interfaces';
 import { NoticePost, NoticePostHead } from './notice_post.interfaces';
 import { ReferencePost, ReferencePostHead } from './reference_post.interfaces';
