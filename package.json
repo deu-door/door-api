@@ -14,7 +14,7 @@
 	],
 	"scripts": {
 		"example": "ts-node src/example.ts",
-		"lint": "eslint .",
+		"lint": "eslint src test",
 		"test": "tsc && jest --runInBand",
 		"build": "tsc",
 		"postinstall": "tsc"
