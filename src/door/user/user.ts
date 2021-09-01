@@ -12,13 +12,15 @@ export async function login(door: Door, id: string, password: string): Promise<U
 	}
 
 	// get login page from
-	const { document } = await door.get('https://door.deu.ac.kr/Account/Index');
+	const document = await door.get('https://door.deu.ac.kr/Account/Index');
 
 	// submit form on login page
 	const response = await door.axios.post(
 		'https://door.deu.ac.kr/Account/LogOnProcess',
 		{
-			...Object.fromEntries([...document.querySelectorAll<HTMLInputElement>('form input')].map(input => [input.name, input.value])),
+			...Object.fromEntries(
+				document.querySelectorAll('form input').map(input => [input.getAttribute('name'), input.getAttribute('value')]),
+			),
 			Message: '',
 			userid: id,
 			password: password,
@@ -61,18 +63,15 @@ export async function logout(door: Door): Promise<void> {
 }
 
 export async function getUser(door: Door): Promise<User> {
-	const { document, HTMLTableElement } = await door.get('https://door.deu.ac.kr/Mypage/MyInfo');
+	const document = await door.get('https://door.deu.ac.kr/Mypage/MyInfo');
 
-	const table = document.querySelector(
-		'#sub_content2 > div:nth-child(2) > table > tbody > tr > td:nth-child(3) > div.form_table > table',
-	);
+	const table = document.querySelector('#sub_content2 table table');
+	assert(table?.tagName.toLowerCase() === 'table');
 
-	assert(table instanceof HTMLTableElement);
-
-	const id = table.querySelector<HTMLElement>(`tbody > tr:nth-child(2) > td:nth-child(4)`)?.textContent?.trim();
-	const name = table.querySelector<HTMLElement>(`tbody > tr:nth-child(2) > td:nth-child(2)`)?.textContent?.trim();
-	const studentType = table.querySelector<HTMLElement>(`tbody > tr:nth-child(1) > td:nth-child(2)`)?.textContent?.trim();
-	const major = table.querySelector<HTMLElement>(`tbody > tr:nth-child(1) > td:nth-child(4)`)?.textContent?.trim();
+	const id = table.querySelector(`tbody > tr:nth-child(2) > td:nth-child(4)`)?.text.trim();
+	const name = table.querySelector(`tbody > tr:nth-child(2) > td:nth-child(2)`)?.text.trim();
+	const studentType = table.querySelector(`tbody > tr:nth-child(1) > td:nth-child(2)`)?.text.trim();
+	const major = table.querySelector(`tbody > tr:nth-child(1) > td:nth-child(4)`)?.text.trim();
 
 	assert(id !== undefined && name !== undefined && studentType !== undefined && major !== undefined);
 

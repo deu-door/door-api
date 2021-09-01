@@ -1,10 +1,12 @@
+import { HTMLElement } from 'node-html-parser';
 import { Attachment } from './attachment.interfaces';
 
 export function parseAttachmentList(container: HTMLElement, referrer: string): Attachment[] {
-	return [...container.querySelectorAll<HTMLAnchorElement>('a')]
-		.filter(a => a.href !== '#')
+	return container
+		.querySelectorAll('a')
+		.filter(a => a.getAttribute('href') !== '#')
 		.map(element => ({
-			title: element.text ?? '파일',
+			title: element.text.trim() || '파일',
 			url: element.getAttribute('href') ?? '',
 			referrer: referrer.startsWith('/') ? `http://door.deu.ac.kr/${referrer}` : referrer,
 		}))

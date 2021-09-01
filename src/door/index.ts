@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { DOMWindow, JSDOM } from 'jsdom';
 import { DoorUnauthorizedError } from './error/error.interfaces';
 import { getUser, login, logout } from './user/user';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
@@ -16,11 +15,12 @@ import { getTeamProject, getTeamProjectList } from './assignment/team_project';
 import { getActivity, getActivityList } from './assignment/activity';
 import { getLectureList, getLectureProgressList } from './lecture/lecture';
 import { download } from './file/download';
+import parse, { HTMLElement } from 'node-html-parser';
 
 export class Door {
 	cookieJar: CookieJar;
 	axios: AxiosInstance;
-	parser: (content: string) => DOMWindow;
+	parser: (content: string) => HTMLElement;
 
 	constructor(axiosOptions?: AxiosRequestConfig) {
 		this.cookieJar = this.createCookieJar();
@@ -79,7 +79,11 @@ export class Door {
 	}
 
 	createParser() {
-		return (content: string) => new JSDOM(content).window;
+		// Use node-html-parser library.
+		// see https://github.com/taoqf/node-html-parser
+		return (content: string): HTMLElement => {
+			return parse(content);
+		};
 	}
 
 	verbose(): void {
@@ -88,7 +92,7 @@ export class Door {
 		//this.axios.interceptors.response.use(AxiosLogger.responseLogger, AxiosLogger.errorLogger);
 	}
 
-	async fetch(url: string, config: AxiosRequestConfig = {}): Promise<DOMWindow> {
+	async fetch(url: string, config: AxiosRequestConfig = {}): Promise<HTMLElement> {
 		const response = await this.axios({ url, ...config });
 		const fetchedPath: string | undefined = response.request.path;
 
@@ -100,11 +104,11 @@ export class Door {
 		return this.parser(response.data);
 	}
 
-	async get(url: string, config: AxiosRequestConfig = {}): Promise<DOMWindow> {
+	async get(url: string, config: AxiosRequestConfig = {}): Promise<HTMLElement> {
 		return this.fetch(url, { method: 'GET', ...config });
 	}
 
-	async post(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<DOMWindow> {
+	async post(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<HTMLElement> {
 		return this.fetch(url, { method: 'POST', data, ...config });
 	}
 

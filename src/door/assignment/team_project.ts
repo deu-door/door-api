@@ -8,16 +8,19 @@ import { TeamProject, TeamProjectHead } from './team_project.interfaces';
 import { parseAttachmentList } from '../attachment/attachment';
 
 export async function getTeamProjectList(door: Door, courseId: Course['id']): Promise<TeamProjectHead[]> {
-	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseTeamProjectStudentList/${courseId}`);
-	const teamProjectTable = document.querySelector('#sub_content2 > div:nth-child(4) > table');
+	const document = await door.get(`/LMS/LectureRoom/CourseTeamProjectStudentList/${courseId}`);
 
-	assert(teamProjectTable instanceof HTMLTableElement);
+	const teamProjectTable = document.querySelector('#sub_content2 > div:nth-child(4) > table');
+	assert(teamProjectTable?.tagName.toLowerCase() === 'table');
 
 	const teamProjectHeads: TeamProjectHead[] = parseListedTableElement(teamProjectTable)
 		// filter for 등록된 팀프로젝트가 없습니다
-		.filter(row => /\d+/.test(row['No'].text))
+		.filter(row => /\d+/.test(row['No'].text.trim()))
 		.map(row => {
-			const [from, to] = row['제출기간'].text.split('~').map(date => new Date('20' + date.trim()).toISOString());
+			const [from, to] = row['제출기간'].text
+				.trim()
+				.split('~')
+				.map(date => new Date('20' + date.trim()).toISOString());
 
 			return {
 				variant: AssignmentVariant.TEAM_PROJECT as const,
@@ -26,11 +29,11 @@ export async function getTeamProjectList(door: Door, courseId: Course['id']): Pr
 				id: row['팀프로젝트 제목'].url?.match(/ProjectNo=(\d+)/)?.[1] || '',
 				courseId: courseId,
 
-				title: row['팀프로젝트 제목'].text,
+				title: row['팀프로젝트 제목'].text.trim(),
 				type: AssignmentType.TEAM,
 				// TODO: implement 제출방식 (예: 팀장제출)
 				duration: { from, to },
-				submitted: row['제출 여부'].text === '제출',
+				submitted: row['제출 여부'].text.trim() === '제출',
 			};
 		})
 		.filter(teamProjectHead => teamProjectHead.id !== '');
@@ -41,19 +44,23 @@ export async function getTeamProjectList(door: Door, courseId: Course['id']): Pr
 export async function getTeamProject(door: Door, head: Pick<TeamProjectHead, 'courseId' | 'id'>): Promise<TeamProject> {
 	const { courseId, id } = head;
 	const url = `/LMS/LectureRoom/CourseTeamProjectStudentDetail?CourseNo=${courseId}&ProjectNo=${id}`;
-	const { document, HTMLTableElement, HTMLFormElement } = await door.get(url);
+	const document = await door.get(url);
 
-	const descriptionTable = document.querySelector('#sub_content2 > div.form_table_b > table');
-	const submissionTable = document.querySelector('#CourseLeture > div.form_table_s > table');
+	const descriptionTable = document.querySelector('.form_table_b table');
+	const submissionTable = document.querySelector('.form_table_s table');
 	const form = document.querySelector('#CourseLeture');
-
-	assert(descriptionTable instanceof HTMLTableElement && submissionTable instanceof HTMLTableElement && form instanceof HTMLFormElement);
+	assert(
+		descriptionTable?.tagName.toLowerCase() === 'table' &&
+			submissionTable?.tagName.toLowerCase() === 'table' &&
+			form?.tagName.toLowerCase() === 'form',
+	);
 
 	const description = parseInformaticTableElement(descriptionTable);
-
 	const attachments = parseAttachmentList(description['첨부파일'], url);
-
-	const [from, to] = description['제출기간'].text.split('~').map(date => new Date('20' + date.trim()).toISOString());
+	const [from, to] = description['제출기간'].text
+		.trim()
+		.split('~')
+		.map(date => new Date('20' + date.trim()).toISOString());
 
 	// 제출 관련 정보 파싱
 	const submission = parseSubmission(submissionTable, url);
@@ -67,7 +74,7 @@ export async function getTeamProject(door: Door, head: Pick<TeamProjectHead, 'co
 
 		type: AssignmentType.TEAM,
 		// 수업활동일지에선 '주제' 가 사용됨
-		title: description['제목']?.text ?? description['주제']?.text ?? '제목이 없습니다',
+		title: description['제목']?.text.trim() ?? description['주제']?.text.trim() ?? '제목이 없습니다',
 		// 수업활동일지에선 '수업내용' 이 사용됨
 		contents: description['내용']?.innerHTML ?? description['수업내용']?.innerHTML ?? '',
 

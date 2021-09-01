@@ -55,32 +55,34 @@ const getDoorLink = (onclick: string) => {
 };
 
 export async function getLectureList(door: Door, courseId: Course['id']): Promise<Lecture[]> {
-	const { document, HTMLTableElement, HTMLSelectElement } = await door.get(`/LMS/StudyRoom/Index/${courseId}`);
+	const document = await door.get(`/LMS/StudyRoom/Index/${courseId}`);
 
 	const table = document.querySelector('table#gvListTB');
 	const termOptions = document.querySelector('#tno'); // 연도를 가져오기 위함
+	assert(table?.tagName.toLowerCase() === 'table' && termOptions?.tagName.toLowerCase() === 'select');
 
-	assert(table instanceof HTMLTableElement && termOptions instanceof HTMLSelectElement);
-
-	const year = /(\d+)년도/.exec(termOptions.querySelector('option[selected]')?.textContent ?? '')?.[1];
+	const year = /(\d+)년도/.exec(termOptions.querySelector('option[selected]')?.text.trim() ?? '')?.[1];
 	assert(year !== undefined && /\d+/.test(year));
 
 	const lectures: Lecture[] = parseListedTableElement(table).map(row => {
 		const { url } = getDoorLink(row['강의주제'].querySelector('a')?.getAttribute('onclick') || '');
-		const [from, to] = row['수업기간'].text.split('~').map(token => new Date(`${year}-${token.trim()}`));
+		const [from, to] = row['수업기간'].text
+			.trim()
+			.split('~')
+			.map(token => new Date(`${year}-${token.trim()}`));
 
 		return {
 			courseId,
-			title: row['강의주제'].querySelector('a')?.textContent?.trim() || '',
+			title: row['강의주제'].querySelector('a')?.text.trim() || '',
 			type: parseImageText(row['수업 형태'].querySelector('img')?.getAttribute('src') || '') as LectureType,
 
-			week: Number(row['주차'].text),
-			period: Number(row['차시'].text),
+			week: Number(row['주차'].text.trim()),
+			period: Number(row['차시'].text.trim()),
 			duration: {
 				from: startOfDay(from).toISOString(),
 				to: endOfDay(to).toISOString(),
 			},
-			length: Number(row['학습시간(분)'].text),
+			length: Number(row['학습시간(분)'].text.trim()),
 			attendance: parseImageText(row['출결상태'].querySelector('img')?.getAttribute('src') || '') as LectureAttendance | undefined,
 
 			url,
@@ -91,31 +93,31 @@ export async function getLectureList(door: Door, courseId: Course['id']): Promis
 }
 
 export async function getLectureProgressList(door: Door, courseId: Course['id']): Promise<LectureProgress[]> {
-	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseLectureInfo/${courseId}`);
+	const document = await door.get(`/LMS/LectureRoom/CourseLectureInfo/${courseId}`);
 
 	const learningProgressTable = document.querySelector('#gvListTB');
 
-	assert(learningProgressTable instanceof HTMLTableElement);
+	assert(learningProgressTable?.tagName.toLowerCase() === 'table');
 
 	const lectureProgresses: LectureProgress[] = parseListedTableElement(learningProgressTable).map(row => ({
 		courseId,
 
-		week: Number(row['주차'].text),
-		period: Number(row['차시'].text),
+		week: Number(row['주차'].text.trim()),
+		period: Number(row['차시'].text.trim()),
 
-		// type: row['수업형태'].text as LectureProgress['type'],
+		// type: row['수업형태'].text.trim() as LectureProgress['type'],
 
 		// parse later
 		attendance: '수업없음',
 
-		length: Number(row['학습시간(분)'].text.split('/')[1]),
-		current: Number(row['학습시간(분)'].text.split('/')[0]),
+		length: Number(row['학습시간(분)'].text.trim().split('/')[1]),
+		current: Number(row['학습시간(분)'].text.trim().split('/')[0]),
 
-		views: Number(row['강의접속수'].text),
+		views: Number(row['강의접속수'].text.trim()),
 
-		startedAt: row['최초학습일'].text.trim().length > 0 ? new Date(row['최초학습일'].text).toISOString() : undefined,
-		finishedAt: row['학습완료일'].text.trim().length > 0 ? new Date(row['학습완료일'].text).toISOString() : undefined,
-		recentViewedAt: row['최근학습일'].text.trim().length > 0 ? new Date(row['최근학습일'].text).toISOString() : undefined,
+		startedAt: row['최초학습일'].text.trim().length > 0 ? new Date(row['최초학습일'].text.trim()).toISOString() : undefined,
+		finishedAt: row['학습완료일'].text.trim().length > 0 ? new Date(row['학습완료일'].text.trim()).toISOString() : undefined,
+		recentViewedAt: row['최근학습일'].text.trim().length > 0 ? new Date(row['최근학습일'].text.trim()).toISOString() : undefined,
 	}));
 
 	return lectureProgresses;

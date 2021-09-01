@@ -9,26 +9,29 @@ import { getTeamProject } from './team_project';
 import { parseAssignmentType } from '../helper/assignment';
 
 export async function getActivityList(door: Door, courseId: Course['id']): Promise<ActivityHead[]> {
-	const { document, HTMLTableElement } = await door.get(`/LMS/LectureRoom/CourseOutputs/${courseId}`);
-	const table = document.querySelector('#sub_content2 > div > table');
+	const document = await door.get(`/LMS/LectureRoom/CourseOutputs/${courseId}`);
 
-	assert(table instanceof HTMLTableElement);
+	const table = document.querySelector('#sub_content2 > div > table');
+	assert(table?.tagName.toLowerCase() === 'table');
 
 	const activityHeads: ActivityHead[] = parseListedTableElement(table)
 		// filter for 등록된 산출물이 없습니다
-		.filter(row => /\d+/.test(row['No'].text))
+		.filter(row => /\d+/.test(row['No'].text.trim()))
 		.map(row => {
-			const [from, to] = row['제출기간'].text.split('~').map(date => new Date('20' + date.trim()).toISOString());
+			const [from, to] = row['제출기간'].text
+				.trim()
+				.split('~')
+				.map(date => new Date('20' + date.trim()).toISOString());
 
 			return {
 				variant: AssignmentVariant.ACTIVITY as const,
-				type: parseAssignmentType(row['제출방식'].text),
+				type: parseAssignmentType(row['제출방식'].text.trim()),
 				partial: true as const,
 
 				id: row['주제'].url?.match(/HomeworkNo=(\d+)/)?.[1] ?? row['주제'].url?.match(/ProjectNo=(\d+)/)?.[1] ?? '',
 				courseId,
 
-				title: row['주제'].text,
+				title: row['주제'].text.trim(),
 				duration: { from, to },
 			};
 		})
