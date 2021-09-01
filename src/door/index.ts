@@ -17,15 +17,29 @@ import { getActivity, getActivityList } from './assignment/activity';
 import { getLectureList, getLectureProgressList } from './lecture/lecture';
 
 export class Door {
+	cookieJar: CookieJar;
 	axios: AxiosInstance;
 	parser: (content: string) => DOMWindow;
 
 	constructor(axiosOptions?: AxiosRequestConfig) {
+		this.cookieJar = this.createCookieJar();
 		this.axios = this.createAxiosInstance(axiosOptions);
 		this.parser = this.createParser();
 	}
 
-	createAxiosInstance(axiosOptions?: AxiosRequestConfig) {
+	getHeaders(): Record<string, string> {
+		const headers: Record<string, string> = Object.assign({}, this.axios.defaults.headers);
+
+		headers['Cookie'] = this.cookieJar.getCookieStringSync('http://door.deu.ac.kr');
+
+		return headers;
+	}
+
+	createCookieJar(): CookieJar {
+		return new CookieJar();
+	}
+
+	createAxiosInstance(axiosOptions?: AxiosRequestConfig): AxiosInstance {
 		const axiosInstance = axios.create({
 			baseURL: 'http://door.deu.ac.kr',
 			transformRequest: [
@@ -42,7 +56,7 @@ export class Door {
 		// keep session using cookie jar. (cookie saved between api calls)
 		// see cookie-jar: https://www.npmjs.com/package/axios-cookiejar-support
 		axiosCookieJarSupport(axiosInstance);
-		axiosInstance.defaults.jar = new CookieJar();
+		axiosInstance.defaults.jar = this.cookieJar;
 
 		// 기본 Accept 헤더는 application/json, text/plain, */* 이렇게 되어있는데
 		// 기본 값으로 사용시 서버 측에서 500 Internal 에러 발생
