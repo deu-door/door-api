@@ -47,7 +47,7 @@ export class Door {
 				// 주어진 x-www-form-urlencoded data를 stringify하는 역할
 				(data, headers) => qs.stringify(data, { arrayFormat: 'brackets' }),
 			],
-			timeout: 5000,
+			timeout: 10000,
 			withCredentials: true,
 			validateStatus: status => status >= 200 && status <= 302,
 
