@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { DoorUnauthorizedError } from './error/error.interfaces';
+import { DoorUnauthorizedError, DoorUnavailableError } from './error/error.interfaces';
 import { getUser, login, logout } from './user/user';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
@@ -74,6 +74,14 @@ export class Door {
 		// 크롬 정책 상 XHR에서 설정 불가.
 		axiosInstance.defaults.headers.common['User-Agent'] =
 			'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Mobile Safari/537.36';
+
+		// custom error handler
+		axiosInstance.interceptors.response.use(
+			response => response,
+			error => {
+				throw new DoorUnavailableError([error?.name, error?.message].filter(Boolean).join(': '));
+			},
+		);
 
 		return axiosInstance;
 	}
