@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { Course } from '../course/course.interfaces';
 import { Door } from '..';
-import { parseSubmission } from './submission/submission';
+import { parseSubmission } from '../helper/submission';
 import { parseInformaticTableElement, parseListedTableElement } from '../helper/table';
 import { AssignmentType, AssignmentVariant } from './assignment.interfaces';
 import { TeamProject, TeamProjectHead } from './team_project.interfaces';
