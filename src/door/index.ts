@@ -17,8 +17,7 @@ import { getLectureList, getLectureProgressList } from './lecture/lecture';
 import { download } from './file/download';
 import parse, { HTMLElement } from 'node-html-parser';
 import https from 'https';
-import fs from 'fs';
-import path from 'path';
+import cas from './cert/cas';
 
 export class Door {
 	cookieJar: CookieJar;
@@ -54,10 +53,7 @@ export class Door {
 			withCredentials: true,
 			validateStatus: status => status >= 200 && status <= 302,
 			httpsAgent: new https.Agent({
-				ca: [
-					fs.readFileSync(path.resolve(__dirname, '../../cert/sectigo.pem')),
-					fs.readFileSync(path.resolve(__dirname, '../../cert/sectigo-ca.pem')),
-				],
+				ca: cas,
 			}),
 
 			...axiosOptions,
