@@ -50,9 +50,6 @@ export async function getHomework(door: Door, head: Pick<HomeworkHead, 'courseId
 	const url = `/LMS/LectureRoom/CourseHomeworkStudentDetail?CourseNo=${courseId}&HomeworkNo=${id}`;
 
 	const document = await door.get(url);
-
-	console.log(document.toString());
-
 	const descriptionTable = document.querySelector('.form_table_b table');
 	//const resultTable = document.querySelector('#sub_content2 > div:nth-child(3) > table:not(.tbl_type)'); // this may be a null
 	const submissionTable = document.querySelector('.form_table_s table');
