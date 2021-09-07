@@ -127,7 +127,7 @@ export class Door {
 		return this.fetch(url, { method: 'GET', ...config });
 	}
 
-	async post(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<HTMLElement> {
+	async post(url: string, data?: unknown, config: AxiosRequestConfig = {}): Promise<HTMLElement> {
 		return this.fetch(url, { method: 'POST', data, ...config });
 	}
 
