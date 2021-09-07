@@ -18,6 +18,8 @@ import { download } from './file/download';
 import parse, { HTMLElement } from 'node-html-parser';
 import https from 'https';
 import cas from './cert/cas';
+import { submitSubmission } from './assignment/submission/submission';
+import FormData from 'form-data';
 
 export class Door {
 	cookieJar: CookieJar;
@@ -46,8 +48,12 @@ export class Door {
 		const axiosInstance = axios.create({
 			baseURL: 'http://door.deu.ac.kr',
 			transformRequest: [
-				// 주어진 x-www-form-urlencoded data를 stringify하는 역할
-				(data, headers) => qs.stringify(data, { arrayFormat: 'brackets' }),
+				(data, headers) => {
+					if (data instanceof FormData) return data;
+
+					// 주어진 x-www-form-urlencoded data를 stringify하는 역할
+					return qs.stringify(data, { arrayFormat: 'brackets' });
+				},
 			],
 			timeout: 10000,
 			withCredentials: true,
@@ -278,4 +284,9 @@ export class Door {
 	 * @throws {DoorUnauthorizedError} 로그인 되어있지 않을 시 발생하는 에러
 	 */
 	download = (...params: DropFirst<Parameters<typeof download>>) => download(this, ...params);
+
+	/**
+	 * Door에 과제 또는 팀 프로젝트, 수업활동일지를 제출합니다.
+	 */
+	submitSubmission = (...params: DropFirst<Parameters<typeof submitSubmission>>) => submitSubmission(this, ...params);
 }
